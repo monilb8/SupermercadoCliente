@@ -89,8 +89,6 @@
 		    	if(this.identificador >0){
 		    		let mensajeValidacion = isFormularioValido(this.nombreProducto,this.precioProducto,this.fechaProducto, this.cantidadProducto);
 		    		if(mensajeValidacion ==''){
-		    			console.log('this.fechaProducto'+this.fechaProducto);
-		    			let fecha = new Date();
 				    	let data = {
 					        Nombre: this.nombreProducto,
 					        Precio: this.precioProducto,
@@ -132,7 +130,9 @@
     		this.producto = this.$parent.producto;
     		this.nombreProducto = this.producto.Nombre;
     		this.precioProducto= this.producto.Precio;
-		    this.fechaProducto= this.producto.Fecha.split('T')[0];
+    		if(this.producto.Fecha != null && this.producto.Fecha!= ''){
+		    	this.fechaProducto= this.producto.Fecha.split('T')[0];
+			}
 		    this.cantidadProducto= this.producto.Cantidad;
 		    this.identificador=this.producto.Id;
   		}

@@ -2,7 +2,7 @@
   <div id="home" class="container"> 
     <div class="row justify-content-center">
       <div class="menu">
-        <button id="tipoProducto" type="button" class="btn btn-primary btn-lg" v-on:click="abrirComponente">Tipo Producto</button>
+        <button id="seccion" type="button" class="btn btn-primary btn-lg" v-on:click="abrirComponente">Sección</button>
         <button id="producto" type="button" class="btn btn-primary btn-lg" v-on:click="abrirComponente">Producto</button>
       </div>
     </div>
@@ -13,7 +13,7 @@
 <script>
   import axios from "axios"
   import Vue from 'vue'
-  //import MasterTipoProducto from "./MaestroTipoProducto.vue"
+  import MasterSeccion from "./MaestroSeccion.vue"
   import MasterProducto from "./MaestroProducto.vue"
 
   export default {
@@ -25,12 +25,12 @@
     methods:{
       abrirComponente:function(e){
         switch(e.target.id){
-/*          case "tipoProducto":
+          case "seccion":
             new Vue({
               el: '#maestro',
-              render: h => h(MasterTipoProducto)
+              render: h => h(MasterSeccion)
             })
-            break;*/
+            break;
 
           case "producto":
             new Vue({

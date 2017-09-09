@@ -1,22 +1,28 @@
 <template>
-	<div id="maestro" class="contenedor">
-		<h2 class="titulo">Producto</h2>
-		<table v-if="productos && productos.length" class="table table-bordered">
-		 	<tr>
-		 		<th>Nombre</th>
-		 		<th>Marca</th>
-		 		<th>Precio</th>
-		 		<th>Cantidad</th>
-		 	</tr>
-			<tr v-for="producto of productos" v-on:click="detalle" v-bind:id="producto.Id">
-				<td>{{ producto.Nombre }}</td>
-				<td>{{ producto.Marca }}</td>
-				<td>{{ producto.Precio }}</td>
-				<td>{{ producto.Cantidad }}</td>
-			</tr>
-		</table>
-		<input type="button" class="btn btn-success btn-sm" id="nuevo" value="Mostrar Detalle" v-on:click="nuevo"/>
-		<div id="form"></div>
+	<div id="maestro" class="container">
+		<div class="row">
+			<div class="col">
+				<h2 class="titulo">Producto</h2>
+				<table v-if="productos && productos.length" class="table table-bordered">
+				 	<tr>
+				 		<th>Nombre</th>
+				 		<th>Precio</th>
+				 		<th>Cantidad</th>
+				 	</tr>
+					<tr v-for="producto of productos" v-on:click="detalle" v-bind:id="producto.Id">
+						<td>{{ producto.Nombre }}</td>
+						<td>{{ producto.Precio }}</td>
+						<td>{{ producto.Cantidad }}</td>
+						<!-- <td>{{new Date(producto.Fecha).toLocaleDateString()}}</td> -->
+					</tr>
+				</table>
+				<input type="button" class="btn btn-success btn-sm" id="nuevo" value="Mostrar Detalle" v-on:click="nuevo"/>
+			</div>
+			<div class="col">
+			<div id="form"></div>
+			</div>
+		</div>
+		
 	</div>
 </template>
 
@@ -63,7 +69,7 @@
 		  		pro.Id=-1;
 		  		pro.Nombre=undefined;
 		  		pro.Marca=undefined;
-		  		pro.Precio=undefined;
+		  		pro.Fecha=undefined;
 		  		pro.Cantidad=undefined;
 
 		  		new Vue({
@@ -84,12 +90,7 @@
 }
 </script>
 <style>
-	.contenedor{
-		width: 800px;
-	}
-	.titulo{
-		margin-top: 3%;
-	}
+
 	
 </style>
 

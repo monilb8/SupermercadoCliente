@@ -11,15 +11,15 @@
 				<input type="number" class="form-control" id="pre" name="duracion" v-model="precioProducto"/>
 			</div>
 			<div>
-				<label>Marca:</label>
-				<input type="text" class="form-control" id="mar" name="marca" v-model="marcaProducto" />
+				<label>Fecha:</label>
+				<input type="date" class="form-control" id="fec" name="fecha" v-model="fechaProducto" />
 			</div>
 			<div>
 				<label>Cantidad:</label>
 				<input type="number" class="form-control" id="cant" name="cantidad" v-model="cantidadProducto" />
 			</div>
 			<div class="botones">
-				<input type="button" class="btn btn-outline-success btn-sm" id="btnEnv" value="Enviar" v-on:click="enviar"/>
+				<input type="button" class="btn btn-outline-success btn-sm" id="btnEnv" value="Insertar" v-on:click="enviar"/>
 				<input type="button" class="btn btn-outline-success btn-sm" id="btnAct" value="Actualizar" v-on:click="actualizar"/>
 				<input type="button" class="btn btn-outline-success btn-sm" id="btnEli" value="Eliminar" v-on:click="eliminar"/>
 				<input type="button" class="btn btn-outline-success btn-sm" id="btnVac" value="Vaciar" v-on:click="nuevo"/>
@@ -40,7 +40,7 @@
 		     	activo: true,
 		     	nombreProducto:undefined,
 		     	precioProducto:undefined,
-		     	marcaProducto:undefined,
+		     	fechaProducto:undefined,
 		     	cantidadProducto:undefined,
 		     	identificador:undefined
 		    }
@@ -50,19 +50,19 @@
 		  		this.producto = {};
 		  		this.nombreProducto=undefined;
 		     	this.precioProducto=undefined;
-		     	this.marcaProducto=undefined;
+		     	this.fechaProducto=undefined;
 		     	this.cantidadProducto=undefined;
 		     	this.identificador=-1;
 		  	},
 
 		  	enviar: function(){
 		    	if(this.identificador <0){
-		    		let mensajeValidacion = isFormularioValido(this.nombreProducto,this.precioProducto,this.marcaProducto, this.cantidadProducto);
+		    		let mensajeValidacion = isFormularioValido(this.nombreProducto,this.precioProducto,this.fechaProducto, this.cantidadProducto);
 		    		if(mensajeValidacion ==''){
 				    	let data = {
 					        Nombre: this.nombreProducto,
 					        Precio: this.precioProducto,
-					        Marca: this.marcaProducto,
+					        Fecha: this.fechaProducto,
 					        Cantidad: this.cantidadProducto,
 					        Id: this.identificador
 				      	}
@@ -87,12 +87,14 @@
 
 			actualizar: function(){
 		    	if(this.identificador >0){
-		    		let mensajeValidacion = isFormularioValido(this.nombreProducto,this.precioProducto,this.marcaProducto, this.cantidadProducto);
+		    		let mensajeValidacion = isFormularioValido(this.nombreProducto,this.precioProducto,this.fechaProducto, this.cantidadProducto);
 		    		if(mensajeValidacion ==''){
+		    			console.log('this.fechaProducto'+this.fechaProducto);
+		    			let fecha = new Date();
 				    	let data = {
 					        Nombre: this.nombreProducto,
 					        Precio: this.precioProducto,
-					        Marca: this.marcaProducto,
+					        Fecha: this.fechaProducto,
 					        Cantidad: this.cantidadProducto,
 					        Id: this.identificador
 				      	}
@@ -130,13 +132,13 @@
     		this.producto = this.$parent.producto;
     		this.nombreProducto = this.producto.Nombre;
     		this.precioProducto= this.producto.Precio;
-		    this.marcaProducto= this.producto.Marca;
+		    this.fechaProducto= this.producto.Fecha.split('T')[0];
 		    this.cantidadProducto= this.producto.Cantidad;
 		    this.identificador=this.producto.Id;
   		}
 	}
 
-	function isFormularioValido(nomProducto, preProducto, marProducto, cantProducto){
+	function isFormularioValido(nomProducto, preProducto, fechProducto, cantProducto){
 		let mensajeVal='';
 		if(nomProducto == null || nomProducto=='' || (nomProducto!=null && nomProducto.trim()=='')){
 			return 'El nombre del producto debe estar relleno.'
@@ -161,11 +163,6 @@
 	}
 </script>
 <style>
-	.detalle{
-		width: 400px;
-		margin-top: 5%;	
-		margin-bottom: 5%;
-	}
 	.botones{
 		margin-top: 5%;	
 	}

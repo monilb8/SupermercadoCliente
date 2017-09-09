@@ -1,12 +1,11 @@
 <template>
-  <div id="home" class="contenedor">
-    <div id="tipoProducto" class="menu" v-on:click="abrirComponente">
-      Tipo de Producto
+  <div id="home" class="container"> 
+    <div class="row justify-content-center">
+      <div class="menu">
+        <button id="tipoProducto" type="button" class="btn btn-primary btn-lg" v-on:click="abrirComponente">Tipo Producto</button>
+        <button id="producto" type="button" class="btn btn-primary btn-lg" v-on:click="abrirComponente">Producto</button>
+      </div>
     </div>
-    <div id="producto" class="menu" v-on:click="abrirComponente">
-      Producto
-    </div>
-
     <div id="maestro"></div>
   </div>
 </template>
@@ -47,21 +46,11 @@
 </script>
 
 <style>
-  .contenedor{
-    margin: 2%;
-    width: 800px;
-  }
   .menu {
     padding: 5px;
-    display:inline-block;
-    width: 33%;
-    text-align: center;
-    font-weight: bold;
-    color: white;
-    background-color: #61AC6C; 
     border-radius: 5px;
-    border: 2px solid #777777;
     margin-top: 5px;
+    margin-bottom: 30px;
   }
 
 </style>

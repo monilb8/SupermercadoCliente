@@ -2,6 +2,12 @@
 	<div id="form">
 		<div v-if="activo" class="detalle">
 			<h2>Detalle Producto</h2>
+			<label>Sección:</label>
+					<select v-model="seccion">
+				  	<option v-for="optionSec in optionsSec" v-bind:value="optionSec.value">
+				    	{{ optionSec.text }}
+				 	</option>
+				</select>
 			<div>
 				<label>Nombre:</label>
 				<input type="text" class="form-control" id="nom" v-model="nombreProducto" maxlength="40"/>
@@ -38,16 +44,23 @@
 			return {
 		    	producto:{},
 		     	activo: true,
+		     	seccion:undefined,
 		     	nombreProducto:undefined,
 		     	precioProducto:undefined,
 		     	fechaProducto:undefined,
 		     	cantidadProducto:undefined,
-		     	identificador:undefined
+		     	identificador:undefined,
+		     	optionsSec: [
+			      { text: 'Limpieza', value: 'Limpieza' },
+			      { text: 'Lacteos', value: 'Lacteos' },
+			      { text: 'Reposteria', value: 'Reposteria' }
+			    ]
 		    }
 		},
 		methods:{
 		  	nuevo: function(){
 		  		this.producto = {};
+		  		this.seccion=undefined;
 		  		this.nombreProducto=undefined;
 		     	this.precioProducto=undefined;
 		     	this.fechaProducto=undefined;
@@ -60,6 +73,7 @@
 		    		let mensajeValidacion = isFormularioValido(this.nombreProducto,this.precioProducto,this.fechaProducto, this.cantidadProducto);
 		    		if(mensajeValidacion ==''){
 				    	let data = {
+				    		Seccion: this.seccion,
 					        Nombre: this.nombreProducto,
 					        Precio: this.precioProducto,
 					        Fecha: this.fechaProducto,
@@ -90,6 +104,7 @@
 		    		let mensajeValidacion = isFormularioValido(this.nombreProducto,this.precioProducto,this.fechaProducto, this.cantidadProducto);
 		    		if(mensajeValidacion ==''){
 				    	let data = {
+				    		Seccion: this.seccion,
 					        Nombre: this.nombreProducto,
 					        Precio: this.precioProducto,
 					        Fecha: this.fechaProducto,
@@ -128,6 +143,7 @@
 		},
 		created() {
     		this.producto = this.$parent.producto;
+    		this.seccion = this.producto.Seccion;
     		this.nombreProducto = this.producto.Nombre;
     		this.precioProducto= this.producto.Precio;
     		if(this.producto.Fecha != null && this.producto.Fecha!= ''){

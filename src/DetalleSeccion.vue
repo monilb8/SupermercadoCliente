@@ -3,13 +3,41 @@
 		<div v-if="activo" class="detalle">
 			<h2>Detalle Sección</h2>
 			<div>
-				<label>Nombre:</label>
-				<input type="text" class="form-control" id="nom" v-model="nombreSeccion" maxlength="40"/>
+				<label>Nombre de Sección:</label>
+				<select v-model="nombreSeccion">
+				  	<option v-for="optionSec in optionsSec" v-bind:value="optionSec.value">
+				    	{{ optionSec.text }}
+				 	</option>
+				</select>
+
 			</div>
-			<div class="form-group">
-        		<input type="checkbox" id="destacado" name="destacado" v-model="consumibleSeccion" />
-        		<label class="">¿Permitir productos consumibles?</label>
+			<div>
+				<label>Encargado:</label>
+				<input type="text" class="form-control" id="nom" v-model="encargadoSeccion" maxlength="40"/>
+			</div>
+			<div>
+				<label>Frecuencia de Stock:</label>
+				<input type="text" class="form-control" id="nom" v-model="gestionStockSeccion" maxlength="40"/>
+			</div>
+			<div>
+				<label>Fecha de última reposición:</label>
+				<input type="date" class="form-control" id="fec" name="fecha" v-model="fechaSeccion" />
+			</div>
+ 			<div class="form-group">
+        		<input type="checkbox" id="consu" name="consumible" v-model="consumibleSeccion" />
+        		<label class="control-label">¿Permitir productos consumibles?</label>
       		</div>
+      		<div class="form-group">
+		        <label class="control-label">Tipo de Venta:</label>
+		        <input type="radio" name="tipo" value="al peso" v-model:value="ventaPesoSeccion"> Peso
+		        <input type="radio" name="tipo" value="por unidad"  v-model:value="ventaPesoSeccion"> Unidad
+			</div>
+<!--       		<div class="form-group">
+        		<input type="checkbox" id="peso" name="peso" v-model="ventaPesoSeccion" />
+        		<label class="control-label">¿Se vendo al peso?</label>
+      		</div> -->
+
+
 
 			<div class="botones">
 				<input type="button" class="btn btn-outline-success btn-sm" id="btnEnv" value="Insertar" v-on:click="enviar"/>
@@ -32,15 +60,28 @@
 		    	seccion:{},
 		     	activo: true,
 		     	nombreSeccion:undefined,
+		     	encargadoSeccion:undefined,
+		     	gestionStockSeccion: undefined,
+		     	fechaSeccion: undefined,
 		     	consumibleSeccion:undefined,
-		     	identificador:undefined
+		     	ventaPesoSeccion: undefined,
+		     	identificador:undefined,
+		     	optionsSec: [
+			      { text: 'Limpieza', value: 'Limpieza' },
+			      { text: 'Lacteos', value: 'Lacteos' },
+			      { text: 'Reposteria', value: 'Reposteria' }
+			    ]
 		    }
 		},
 		methods:{
 		  	nuevo: function(){
 		  		this.seccion = {};
 		  		this.nombreSeccion=undefined;
+		  		this.encargadoSeccion=undefined;
 		     	this.consumibleSeccion=undefined;
+		     	this.gestionStockSeccion=undefined;
+		  		this.fechaSeccion=undefined;
+		     	this.ventaPesoSeccion=undefined;
 		     	this.identificador=-1;
 		  	},
 
@@ -49,21 +90,25 @@
 		    		let mensajeValidacion = isFormularioValido(this.nombreSeccion,this.consumibleSeccion);
 		    		if(mensajeValidacion ==''){
 				    	let data = {
-					        Nombre: this.nombreSeccion,
+					        NombreSeccion: this.nombreSeccion,
+					        Encargado: this.encargadoSeccion,
 					        Consumible: this.consumibleSeccion,
+					        FechaFrecuenciaStock: this.fechaSeccion,
+					        TipoVenta: this.ventaPesoSeccion,
+					        GestionStock: this.gestionStockSeccion,
 					        Id: this.identificador
 				      	}
 				        axios.post(url ,data)
 				        .then(response => {
 				        	this.identificador = response.data.Id;
 				          	EventBus.$emit("updateSeccion", this.data);
+				          	this.nuevo();
 				          	swal(
 								  '',
 								  'Seccion creada!',
 								  'success'
 							)
 				        })
-				        this.nuevo();
 			        }else{
 			        	swal('', mensajeValidacion, 'error');
 			        }
@@ -77,20 +122,25 @@
 		    		let mensajeValidacion = isFormularioValido(this.nombreSeccion,this.consumibleSeccion);
 		    		if(mensajeValidacion ==''){
 				    	let data = {
-					        Nombre: this.nombreSeccion,
+					        NombreSeccion: this.nombreSeccion,
+					        Encargado: this.encargadoSeccion,
 					        Consumible: this.consumibleSeccion,
+					        FechaFrecuenciaStock: this.fechaSeccion,
+					        TipoVenta: this.ventaPesoSeccion,
+					        GestionStock: this.gestionStockSeccion,
 					        Id: this.identificador
 				      	}
 						axios.put(url + data.Id, data)
 						.then(response => {
 							EventBus.$emit("updateSeccion", this.data);
+							this.nuevo();
 							swal(
 								  '',
 								  'Sección actualizada!',
 								  'success'
 								)
 						})
-						this.nuevo();
+						
 					}else{
 						swal('', mensajeValidacion, 'error');
 			        }
@@ -113,8 +163,15 @@
 		},
 		created() {
     		this.seccion = this.$parent.seccion;
-    		this.nombreSeccion = this.seccion.Nombre;
+    		this.nombreSeccion = this.seccion.NombreSeccion;
+    		this.encargadoSeccion = this.seccion.Encargado;
     		this.consumibleSeccion= this.seccion.Consumible;
+    		if(this.seccion.FechaFrecuenciaStock != null && this.seccion.FechaFrecuenciaStock!= ''){
+		    	this.fechaSeccion= this.seccion.FechaFrecuenciaStock.split('T')[0];
+			}
+
+    		this.ventaPesoSeccion = this.seccion.TipoVenta;
+    		this.gestionStockSeccion= this.seccion.GestionStock;
 		    this.identificador=this.seccion.Id;
   		}
 	}
@@ -127,7 +184,7 @@
 
 		return '';
 	}
-	
+
 </script>
 <style>
 	.botones{

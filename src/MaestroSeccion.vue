@@ -5,13 +5,14 @@
 				<h2 class="titulo">Sección</h2>
 				<table v-if="secciones && secciones.length" class="table table-bordered">
 				 	<tr>
-				 		<th>Nombre</th>
-				 		<th>Consumible</th>
+				 		<th>Nombre de Sección</th>
+				 		<th>Encargado</th>
+				 		<th>Fecha</th>
 				 	</tr>
 					<tr v-for="seccion of secciones" v-on:click="detalle" v-bind:id="seccion.Id">
-						<td>{{ seccion.Nombre }}</td>
-						<td v-if="seccion.Consumible == true"> Activado </td>
-            			<td v-else>Desactivado</td>
+						<td>{{ seccion.NombreSeccion }}</td>
+						<td>{{ seccion.Encargado }}</td>
+						<td>{{new Date(seccion.FechaFrecuenciaStock).toLocaleDateString()}}</td>
 					</tr>
 				</table>
 				<input type="button" class="btn btn-success btn-sm" id="nuevo" value="Mostrar Detalle" v-on:click="nuevo"/>
@@ -65,10 +66,12 @@
 
 				let sec = {};
 		  		sec.Id=-1;
-		  		sec.Nombre=undefined;
-		  		sec.Marca=undefined;
-		  		sec.Fecha=undefined;
-		  		sec.Cantidad=undefined;
+		  		sec.NombreSeccion=undefined;
+		  		sec.Encargado=undefined;
+		  		sec.FechaFrecuenciaStock=undefined;
+		  		sec.Consumible=false;
+		  		sec.GestionStock=undefined;
+		  		sec.VentaAlPeso=false;
 
 		  		new Vue({
 				el: '#form',

@@ -4,7 +4,7 @@
 			<h2>Detalle Producto <a class="close" v-on:click="close">&times;</a></h2>
 			<label>Sección:</label>
 			<div>
-				<select class="custom-select" v-model="seccion">
+				<select class="custom-select" v-model="seccion" v-on:change="ocultar">
 					<option v-for="optionSec in optionsSec" v-bind:value="optionSec.value">
 				   	{{ optionSec.text }}
 				 	</option>
@@ -27,14 +27,14 @@
 				<input type="date" class="form-control" id="fec" name="fecha" v-model="fechaProducto" />
 			</div>
 			<br>
-			<div>
+			<div >
 				<label>Cantidad:</label>
-				<input type="number" class="form-control" id="cant" name="cantidad" v-model="cantidadProducto" />
+				<input type="number" class="form-control" id="cant" name="cantidad" v-model="cantidadProducto"  :disabled="esPorPeso == true"/>
 			</div>
 			<br>
 			<div>
 				<label>Peso:</label>
-				<input type="number" class="form-control" id="pes" name="peso" v-model="pesoProducto" />
+				<input type="number" class="form-control" id="pes" name="peso" v-model="pesoProducto"  :disabled="esPorCantidad == true"/>
 			</div>
 			<br>
 			<div>
@@ -66,6 +66,8 @@
 			return {
 		    	producto:{},
 		     	activo: true,
+		     	esPorPeso: false,
+		     	esPorCantidad: false,
 		     	seccion:undefined,
 		     	nombreProducto:undefined,
 		     	precioProducto:undefined,
@@ -94,19 +96,30 @@
 		     	this.ofertaProducto=undefined;
 		     	this.numUnidadProducto=undefined;
 		     	this.identificador=-1;
+		     	this.esPorPeso=false;
+		     	this.esPorCantidad=false;
 		  	},
 
 		  	enviar: function(){
 		    	if(this.identificador <0){
 		    		let mensajeValidacion = isFormularioValido(this.nombreProducto,this.precioProducto,this.fechaProducto, this.cantidadProducto);
 		    		if(mensajeValidacion ==''){
+
+		    			let cantidadAux='0';
+		    			let pesoAux='0';
+		    			if(this.seccion=='Limpieza' || this.seccion=='Lacteos'){
+		    				cantidadAux=this.cantidadProducto;
+		    			}else if(this.seccion=='Reposteria'){
+		    				pesoAux=this.pesoProducto;
+		    			}
+
 				    	let data = {
 				    		Seccion: this.seccion,
 					        Nombre: this.nombreProducto,
 					        Precio: this.precioProducto,
 					        Fecha: this.fechaProducto,
-					        Cantidad: this.cantidadProducto,
-					        Peso: this.pesoProducto,
+					        Cantidad: cantidadAux,
+					        Peso: pesoAux,
 					        Oferta: this.ofertaProducto,
 					        NumUnidades: this.numUnidadProducto,
 					        Id: this.identificador
@@ -134,13 +147,22 @@
 		    	if(this.identificador >0){
 		    		let mensajeValidacion = isFormularioValido(this.nombreProducto,this.precioProducto,this.fechaProducto, this.cantidadProducto);
 		    		if(mensajeValidacion ==''){
+				    	
+						let cantidadAux='0';
+		    			let pesoAux='0';
+		    			if(this.seccion=='Limpieza' || this.seccion=='Lacteos'){
+		    				cantidadAux=this.cantidadProducto;
+		    			}else if(this.seccion=='Reposteria'){
+		    				pesoAux=this.pesoProducto;
+		    			}
+		    			
 				    	let data = {
 				    		Seccion: this.seccion,
 					        Nombre: this.nombreProducto,
 					        Precio: this.precioProducto,
 					        Fecha: this.fechaProducto,
-					        Cantidad: this.cantidadProducto,
-					        Peso: this.pesoProducto,
+					        Cantidad: cantidadAux,
+					        Peso: pesoAux,
 					        Oferta: this.ofertaProducto,
 					        NumUnidades: this.numUnidadProducto,
 					        Id: this.identificador
@@ -168,6 +190,11 @@
 			    	axios.delete(url + this.identificador)
 			        .then(response=> {
 			          EventBus.$emit("updateProducto", response.data);
+			          swal(
+						  '',
+						  'Producto Eliminado!',
+						  'success'
+						)
 			        })
 					this.nuevo();
 				}else{
@@ -178,6 +205,19 @@
       			this.activo = false;
         		EventBus.$emit("seleccionarId", undefined);
       		},
+      		ocultar: function(){
+      			console.log('La seccion vale:'+this.seccion);
+      			if(this.seccion=='Lacteos' || this.seccion=='Limpieza' ){
+      				//Mostraras input de cantidad
+      				this.esPorCantidad=true;
+      				this.esPorPeso=false;
+      			}else if(this.seccion=='Reposteria'){
+      				//Mostraras input de peso
+					this.esPorCantidad=false;
+      				this.esPorPeso=true;
+      			}
+        		//EventBus.$emit("seleccionarId", undefined);
+      		},
 		},
 		created() {
     		this.producto = this.$parent.producto;
@@ -187,11 +227,30 @@
     		if(this.producto.Fecha != null && this.producto.Fecha!= ''){
 		    	this.fechaProducto= this.producto.Fecha.split('T')[0];
 			}
-		    this.cantidadProducto= this.producto.Cantidad;
-		    this.pesoProducto= this.producto.Peso;
+			if(this.producto.Cantidad!= null && this.producto.Cantidad!='0'){
+		    	this.cantidadProducto= this.producto.Cantidad;
+			}else{
+				this.cantidadProducto='';
+			}
+
+			if(this.producto.Peso!= null && this.producto.Peso!='0'){
+		    	this.pesoProducto= this.producto.Peso;
+			}else{
+				this.pesoProducto='';
+			}
+
 		    this.ofertaProducto= this.producto.Oferta;
 		    this.numUnidadProducto= this.producto.NumUnidades;
 		    this.identificador=this.producto.Id;
+			if(this.seccion=='Lacteos' || this.seccion=='Limpieza' ){
+  				//Mostraras input de cantidad
+  				this.esPorCantidad=true;
+  				this.esPorPeso=false;
+  			}else if(this.seccion=='Reposteria'){
+  				//Mostraras input de peso
+				this.esPorCantidad=false;
+  				this.esPorPeso=true;
+  			}
   		}
 	}
 

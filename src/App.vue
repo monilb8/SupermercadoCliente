@@ -1,12 +1,15 @@
 <template>
-  <div id="home" class="container"> 
-    <div class="row justify-content-center">
-      <div class="menu">
-        <button id="seccion" type="button" class="btn btn-primary btn-lg" v-on:click="abrirComponente">Sección</button>
-        <button id="producto" type="button" class="btn btn-primary btn-lg" v-on:click="abrirComponente">Producto</button>
+  <div id="home" class="container-fluid"> 
+    <header class="jumbotron text-center">
+      <div class="row justify-content-center">
+        <div class="menu">
+          <button id="seccion" type="button" class="btn btn-primary btn-lg" v-on:click="abrirComponente">Sección</button>
+          <button id="producto" type="button" class="btn btn-primary btn-lg" v-on:click="abrirComponente">Producto</button>
+        </div>
       </div>
-    </div>
+    </header>
     <div id="maestro"></div>
+
   </div>
 </template>
 

@@ -15,7 +15,7 @@
 						<td>{{new Date(seccion.FechaFrecuenciaStock).toLocaleDateString()}}</td>
 					</tr>
 				</table>
-				<input type="button" class="btn btn-success btn-sm" id="nuevo" value="Mostrar Detalle" v-on:click="nuevo"/>
+				<input type="button" class="btn btn-success btn-md" id="nuevo" value="Mostrar Detalle" v-on:click="nuevo"/>
 			</div>
 			<div class="col">
 			<div id="form"></div>
@@ -74,13 +74,13 @@
 		  		sec.VentaAlPeso=false;
 
 		  		new Vue({
-				el: '#form',
-				render: h => h(Formulario),
-				data:{
-					seccion:sec
-				},
-			});	
-	  	}
+					el: '#form',
+					render: h => h(Formulario),
+					data:{
+						seccion:sec
+					},
+				});	
+	  		}
   	},
   	created() {
       	this.inicio();

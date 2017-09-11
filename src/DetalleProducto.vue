@@ -1,34 +1,56 @@
 <template>
 	<div id="form">
 		<div v-if="activo" class="detalle">
-			<h2>Detalle Producto</h2>
+			<h2>Detalle Producto <a class="close" v-on:click="close">&times;</a></h2>
 			<label>Sección:</label>
-					<select v-model="seccion">
-				  	<option v-for="optionSec in optionsSec" v-bind:value="optionSec.value">
-				    	{{ optionSec.text }}
+			<div>
+				<select class="custom-select" v-model="seccion">
+					<option v-for="optionSec in optionsSec" v-bind:value="optionSec.value">
+				   	{{ optionSec.text }}
 				 	</option>
 				</select>
+			</div>
+			<br>
 			<div>
 				<label>Nombre:</label>
 				<input type="text" class="form-control" id="nom" v-model="nombreProducto" maxlength="40"/>
 			</div>
-			<div>
-				<label>Precio:</label>
+			<br>
+			<label>Precio:</label>
+			<div class="input-group">
 				<input type="number" class="form-control" id="pre" name="duracion" v-model="precioProducto"/>
+				<span class="input-group-addon">€</span>
 			</div>
+			<br>
 			<div>
-				<label>Fecha:</label>
+				<label>Fecha de caducidad:</label>
 				<input type="date" class="form-control" id="fec" name="fecha" v-model="fechaProducto" />
 			</div>
+			<br>
 			<div>
 				<label>Cantidad:</label>
 				<input type="number" class="form-control" id="cant" name="cantidad" v-model="cantidadProducto" />
 			</div>
+			<br>
+			<div>
+				<label>Peso:</label>
+				<input type="number" class="form-control" id="pes" name="peso" v-model="pesoProducto" />
+			</div>
+			<br>
+			<div>
+				<label>Número de unidades:</label>
+				<input type="number" class="form-control" id="uni" name="unidades" v-model="numUnidadProducto" />
+			</div>
+			<br>
+			<div class="form-group">
+        		<input type="checkbox" id="ofer" name="oferta" v-model="ofertaProducto" />
+        		<label>¿Permitir oferta en el producto?</label>
+      		</div>
 			<div class="botones">
-				<input type="button" class="btn btn-outline-success btn-sm" id="btnEnv" value="Insertar" v-on:click="enviar"/>
-				<input type="button" class="btn btn-outline-success btn-sm" id="btnAct" value="Actualizar" v-on:click="actualizar"/>
-				<input type="button" class="btn btn-outline-success btn-sm" id="btnEli" value="Eliminar" v-on:click="eliminar"/>
-				<input type="button" class="btn btn-outline-success btn-sm" id="btnVac" value="Vaciar" v-on:click="nuevo"/>
+				<input type="button" class="btn btn-outline-success btn-md" id="btnEnv" value="Insertar" v-on:click="enviar"/>
+				<input type="button" class="btn btn-outline-success btn-md" id="btnAct" value="Actualizar" v-on:click="actualizar"/>
+				<input type="button" class="btn btn-outline-success btn-md" id="btnEli" value="Eliminar" v-on:click="eliminar"/>
+				<input type="button" class="btn btn-outline-success btn-md" id="btnVac" value="Vaciar" v-on:click="nuevo"/>
 			</div>
 		</div>
 	</div>
@@ -50,10 +72,13 @@
 		     	fechaProducto:undefined,
 		     	cantidadProducto:undefined,
 		     	identificador:undefined,
+		     	pesoProducto:undefined,
+		     	ofertaProducto:undefined,
+		     	numUnidadProducto:undefined,
 		     	optionsSec: [
 			      { text: 'Limpieza', value: 'Limpieza' },
-			      { text: 'Lacteos', value: 'Lacteos' },
-			      { text: 'Reposteria', value: 'Reposteria' }
+			      { text: 'Lácteos', value: 'Lacteos' },
+			      { text: 'Repostería', value: 'Reposteria' }
 			    ]
 		    }
 		},
@@ -65,6 +90,9 @@
 		     	this.precioProducto=undefined;
 		     	this.fechaProducto=undefined;
 		     	this.cantidadProducto=undefined;
+		     	this.pesoProducto=undefined;
+		     	this.ofertaProducto=undefined;
+		     	this.numUnidadProducto=undefined;
 		     	this.identificador=-1;
 		  	},
 
@@ -78,6 +106,9 @@
 					        Precio: this.precioProducto,
 					        Fecha: this.fechaProducto,
 					        Cantidad: this.cantidadProducto,
+					        Peso: this.pesoProducto,
+					        Oferta: this.ofertaProducto,
+					        NumUnidades: this.numUnidadProducto,
 					        Id: this.identificador
 				      	}
 				        axios.post(url ,data)
@@ -109,6 +140,9 @@
 					        Precio: this.precioProducto,
 					        Fecha: this.fechaProducto,
 					        Cantidad: this.cantidadProducto,
+					        Peso: this.pesoProducto,
+					        Oferta: this.ofertaProducto,
+					        NumUnidades: this.numUnidadProducto,
 					        Id: this.identificador
 				      	}
 						axios.put(url + data.Id, data)
@@ -139,7 +173,11 @@
 				}else{
 		    		swal('', 'Debes seleccionar un producto para poder borrar.','');
 		    	}
-			}
+			},
+			close: function(){
+      			this.activo = false;
+        		EventBus.$emit("seleccionarId", undefined);
+      		},
 		},
 		created() {
     		this.producto = this.$parent.producto;
@@ -150,6 +188,9 @@
 		    	this.fechaProducto= this.producto.Fecha.split('T')[0];
 			}
 		    this.cantidadProducto= this.producto.Cantidad;
+		    this.pesoProducto= this.producto.Peso;
+		    this.ofertaProducto= this.producto.Oferta;
+		    this.numUnidadProducto= this.producto.NumUnidades;
 		    this.identificador=this.producto.Id;
   		}
 	}

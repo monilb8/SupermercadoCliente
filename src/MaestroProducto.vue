@@ -16,7 +16,7 @@
 						<!-- <td>{{new Date(producto.Fecha).toLocaleDateString()}}</td> -->
 					</tr>
 				</table>
-				<input type="button" class="btn btn-success btn-sm" id="nuevo" value="Mostrar Detalle" v-on:click="nuevo"/>
+				<input type="button" class="btn btn-success btn-md" id="nuevo" value="Mostrar Detalle" v-on:click="nuevo"/>
 			</div>
 			<div class="col">
 			<div id="form"></div>
@@ -31,7 +31,6 @@
   import Formulario from './DetalleProducto.vue'
   import {EventBus} from './EventBus.js';
   import Vue from 'vue'
-
 	export default {
 	  	name: 'app',
 	  	data () {
@@ -47,7 +46,6 @@
 			  			this.productos = response.data;
 		  			})
 		  	},
-
 		  	detalle: function(evt){
 		  		let id = evt.target.id;
 		  			id = evt.target.parentNode.id;
@@ -64,14 +62,12 @@
 		  		});
 		  	},
 		  	nuevo: function(evt){
-
 				let pro = {};
 		  		pro.Id=-1;
 		  		pro.Nombre=undefined;
 		  		pro.Marca=undefined;
 		  		pro.Fecha=undefined;
 		  		pro.Cantidad=undefined;
-
 		  		new Vue({
 				el: '#form',
 				render: h => h(Formulario),
@@ -91,6 +87,4 @@
 </script>
 <style>
 
-	
 </style>
-

@@ -1,28 +1,37 @@
 <template>
 	<div id="form">
 		<div v-if="activo" class="detalle">
-			<h2>Detalle Sección</h2>
+			<h2>Detalle Sección <a class="close" v-on:click="close">&times;</a></h2>
+			<label>Nombre de Sección:</label>
 			<div>
-				<label>Nombre de Sección:</label>
-				<select v-model="nombreSeccion">
+				<select class="custom-select" v-model="nombreSeccion">
+					<option disabled value="">Selecciona uno</option>
 				  	<option v-for="optionSec in optionsSec" v-bind:value="optionSec.value">
 				    	{{ optionSec.text }}
 				 	</option>
 				</select>
-
 			</div>
+			<br>
 			<div>
 				<label>Encargado:</label>
 				<input type="text" class="form-control" id="nom" v-model="encargadoSeccion" maxlength="40"/>
 			</div>
+			<br>
+			<label>Frecuencia en reponer:</label>
 			<div>
-				<label>Frecuencia de Stock:</label>
-				<input type="text" class="form-control" id="nom" v-model="gestionStockSeccion" maxlength="40"/>
+				<select class="custom-select" v-model="gestionStockSeccion">
+				 	<option disabled value="">Selecciona uno</option>
+				  	<option v-for="optionStock in optionsStock" v-bind:value="optionStock.value">
+				    	{{ optionStock.text }}
+				 	</option>
+				</select>
 			</div>
+			<br>
 			<div>
 				<label>Fecha de última reposición:</label>
 				<input type="date" class="form-control" id="fec" name="fecha" v-model="fechaSeccion" />
 			</div>
+			<br>
  			<div class="form-group">
         		<input type="checkbox" id="consu" name="consumible" v-model="consumibleSeccion" />
         		<label class="control-label">¿Permitir productos consumibles?</label>
@@ -32,18 +41,12 @@
 		        <input type="radio" name="tipo" value="al peso" v-model:value="ventaPesoSeccion"> Peso
 		        <input type="radio" name="tipo" value="por unidad"  v-model:value="ventaPesoSeccion"> Unidad
 			</div>
-<!--       		<div class="form-group">
-        		<input type="checkbox" id="peso" name="peso" v-model="ventaPesoSeccion" />
-        		<label class="control-label">¿Se vendo al peso?</label>
-      		</div> -->
-
-
 
 			<div class="botones">
-				<input type="button" class="btn btn-outline-success btn-sm" id="btnEnv" value="Insertar" v-on:click="enviar"/>
-				<input type="button" class="btn btn-outline-success btn-sm" id="btnAct" value="Actualizar" v-on:click="actualizar"/>
-				<input type="button" class="btn btn-outline-success btn-sm" id="btnEli" value="Eliminar" v-on:click="eliminar"/>
-				<input type="button" class="btn btn-outline-success btn-sm" id="btnVac" value="Vaciar" v-on:click="nuevo"/>
+				<input type="button" class="btn btn-outline-success btn-md" id="btnEnv" value="Insertar" v-on:click="enviar"/>
+				<input type="button" class="btn btn-outline-success btn-md" id="btnAct" value="Actualizar" v-on:click="actualizar"/>
+				<input type="button" class="btn btn-outline-success btn-md" id="btnEli" value="Eliminar" v-on:click="eliminar"/>
+				<input type="button" class="btn btn-outline-success btn-md" id="btnVac" value="Vaciar" v-on:click="nuevo"/>
 			</div>
 		</div>
 	</div>
@@ -68,8 +71,15 @@
 		     	identificador:undefined,
 		     	optionsSec: [
 			      { text: 'Limpieza', value: 'Limpieza' },
-			      { text: 'Lacteos', value: 'Lacteos' },
-			      { text: 'Reposteria', value: 'Reposteria' }
+			      { text: 'Lácteos', value: 'Lacteos' },
+			      { text: 'Repostería', value: 'Reposteria' }
+			    ],
+			    optionsStock: [
+			      { text: 'Dos veces a la semana', value: 'Dos veces a la semana' },
+			      { text: 'Una vez a la semena', value: 'Una vez a la semana' },
+			      { text: 'Cada dos semanas', value: 'Cada dos semanas' },
+			      { text: 'Una vez al mes', value: 'Una vez al mes' },
+			      { text: 'Cada dos mes', value: 'Cada dos meses' },
 			    ]
 		    }
 		},
@@ -87,7 +97,7 @@
 
 		  	enviar: function(){
 		    	if(this.identificador <0){
-		    		let mensajeValidacion = isFormularioValido(this.nombreSeccion,this.consumibleSeccion);
+		    		let mensajeValidacion = isFormularioValido(this.nombreSeccion,this.encargadoSeccion, this.gestionStockSeccion, this.ventaPesoSeccion);
 		    		if(mensajeValidacion ==''){
 				    	let data = {
 					        NombreSeccion: this.nombreSeccion,
@@ -119,7 +129,7 @@
 
 			actualizar: function(){
 		    	if(this.identificador >0){
-		    		let mensajeValidacion = isFormularioValido(this.nombreSeccion,this.consumibleSeccion);
+		    		let mensajeValidacion = isFormularioValido(this.nombreSeccion,this.encargadoSeccion, this.gestionStockSeccion, this.ventaPesoSeccion);
 		    		if(mensajeValidacion ==''){
 				    	let data = {
 					        NombreSeccion: this.nombreSeccion,
@@ -159,7 +169,11 @@
 				}else{
 		    		swal('', 'Debes seleccionar una sección para poder borrar.','');
 		    	}
-			}
+			},
+			close: function(){
+      			this.activo = false;
+        		EventBus.$emit("seleccionarId", undefined);
+      		},
 		},
 		created() {
     		this.seccion = this.$parent.seccion;
@@ -176,12 +190,20 @@
   		}
 	}
 
-	function isFormularioValido(nomSeccion, consuSeccion){
+	function isFormularioValido(nomSeccion, encSeccion, gesSeccion, tiVeSeccion){
 		let mensajeVal='';
 		if(nomSeccion == null || nomSeccion=='' || (nomSeccion!=null && nomSeccion.trim()=='')){
-			return 'El nombre del producto debe estar relleno.'
+			return 'El nombre de la sección debe estar relleno.'
 		}
-
+		if(encSeccion == null || encSeccion=='' || (encSeccion!=null && encSeccion.trim()=='')){
+			return 'El nombre del encargado de la sección debe estar relleno.'
+		}
+		if(gesSeccion == null || gesSeccion=='' || (gesSeccion!=null && gesSeccion.trim()=='')){
+			return 'El campo de frecuencia de reposición debe estar relleno.'
+		}
+		if(tiVeSeccion == null || tiVeSeccion=='' || (tiVeSeccion!=null && tiVeSeccion.trim()=='')){
+			return 'El tipo de venta debe estar relleno. Escoja una de las opciones.'
+		}
 		return '';
 	}
 

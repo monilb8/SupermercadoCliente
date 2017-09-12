@@ -79,7 +79,7 @@
 			      { text: 'Una vez a la semena', value: 'Una vez a la semana' },
 			      { text: 'Cada dos semanas', value: 'Cada dos semanas' },
 			      { text: 'Una vez al mes', value: 'Una vez al mes' },
-			      { text: 'Cada dos mes', value: 'Cada dos meses' },
+			      { text: 'Cada dos meses', value: 'Cada dos meses' },
 			    ]
 		    }
 		},
@@ -97,7 +97,7 @@
 
 		  	enviar: function(){
 		    	if(this.identificador <0){
-		    		let mensajeValidacion = isFormularioValido(this.nombreSeccion,this.encargadoSeccion, this.gestionStockSeccion, this.ventaPesoSeccion, this.feSeccion);
+		    		let mensajeValidacion = isFormularioValido(this.nombreSeccion,this.encargadoSeccion, this.gestionStockSeccion, this.ventaPesoSeccion, this.fechaSeccion);
 		    		if(mensajeValidacion ==''){
 				    	let data = {
 					        NombreSeccion: this.nombreSeccion,
@@ -129,7 +129,7 @@
 
 			actualizar: function(){
 		    	if(this.identificador >0){
-		    		let mensajeValidacion = isFormularioValido(this.nombreSeccion,this.encargadoSeccion, this.gestionStockSeccion, this.ventaPesoSeccion, this.feSeccion);
+		    		let mensajeValidacion = isFormularioValido(this.nombreSeccion,this.encargadoSeccion, this.gestionStockSeccion, this.ventaPesoSeccion, this.fechaSeccion);
 		    		if(mensajeValidacion ==''){
 				    	let data = {
 					        NombreSeccion: this.nombreSeccion,
@@ -155,7 +155,7 @@
 						swal('', mensajeValidacion, 'error');
 			        }
 				}else{
-		    		swal('', 'Debes seleccionar una sección para poder actualizar.', '');
+		    		swal('', 'Debes seleccionar una sección de la tabla para poder actualizar.', '');
 		    	}
 			},
 
@@ -190,7 +190,7 @@
   		}
 	}
 
-	function isFormularioValido(nomSeccion, encSeccion, gesSeccion, feSeccion, tiVeSeccion){
+	function isFormularioValido(nomSeccion, encSeccion, gesSeccion, tiVeSeccion, feSeccion){
 		let mensajeVal='';
 		if(nomSeccion == null || nomSeccion=='' || (nomSeccion!=null && nomSeccion.trim()=='')){
 			return 'El nombre de la sección debe estar relleno.'
@@ -201,6 +201,19 @@
 		if(gesSeccion == null || gesSeccion=='' || (gesSeccion!=null && gesSeccion.trim()=='')){
 			return 'El campo de frecuencia de reposición debe estar relleno.'
 		}
+
+		let hoy = new Date();
+		let d = new Date(feSeccion);
+		if(feSeccion == null || feSeccion == '' ){
+			return 'La fecha de última reposición no puede estar vacía'
+		}
+		if(d>hoy){
+			return 'La fecha de última reposición no puede ser superior a la fecha de hoy'
+		}
+		if(tiVeSeccion == null || tiVeSeccion==''){
+			return 'El tipo de venta debe estar relleno'
+		}
+
 		return '';
 	}
 

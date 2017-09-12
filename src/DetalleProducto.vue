@@ -5,6 +5,7 @@
 			<label>Sección:</label>
 			<div>
 				<select class="custom-select" v-model="seccion" v-on:change="ocultar">
+					<option disabled value="">Selecciona uno</option>
 					<option v-for="optionSec in optionsSec" v-bind:value="optionSec.value">
 				   	{{ optionSec.text }}
 				 	</option>
@@ -24,17 +25,18 @@
 			<br>
 			<div>
 				<label>Fecha de caducidad:</label>
-				<input type="date" class="form-control" id="fec" name="fecha" v-model="fechaProducto" :disabled="tieneFechaCad == true"/>
+				<input type="date" class="form-control" id="fec" name="fecha" v-model="fechaProducto" :disabled="tieneFechaCad == false" />
 			</div>
 			<br>
 			<div >
 				<label>Cantidad:</label>
-				<input type="number" class="form-control" id="cant" name="cantidad" v-model="cantidadProducto"  :disabled="esPorPeso == true"/>
+				<input type="number" class="form-control" id="cant" name="cantidad" v-model="cantidadProducto"  :disabled="esPorPeso == true" placeholder="Introduce número de unidades" />
 			</div>
 			<br>
-			<div>
-				<label>Peso:</label>
-				<input type="number" class="form-control" id="pes" name="peso" v-model="pesoProducto"  :disabled="esPorCantidad == true"/>
+			<label>Peso:</label>
+			<div class="input-group">
+				<input type="number" class="form-control" id="pes" name="peso" v-model="pesoProducto"  :disabled="esPorCantidad == true" placeholder="Introduce el peso en gramos"/>
+				<span class="input-group-addon">g</span>
 			</div>
 			<br>
 			<div class="form-group">
@@ -97,7 +99,7 @@
 
 		  	enviar: function(){
 		    	if(this.identificador <0){
-		    		let mensajeValidacion = isFormularioValido(this.nombreProducto,this.precioProducto,this.fechaProducto, this.cantidadProducto);
+		    		let mensajeValidacion = isFormularioValido(this.nombreProducto,this.precioProducto,this.fechaProducto, this.cantidadProducto, this.seccion, this.pesoProducto);
 		    		if(mensajeValidacion ==''){
 
 		    			let cantidadAux='0';
@@ -128,13 +130,13 @@
 				        .then(response => {
 				        	this.identificador = response.data.Id;
 				          	EventBus.$emit("updateProducto", this.data);
+				          	this.nuevo();
 				          	swal(
 								  '',
 								  'Producto creado!',
 								  'success'
 							)
 				        })
-				        this.nuevo();
 			        }else{
 			        	swal('', mensajeValidacion, 'error');
 			        }
@@ -145,7 +147,7 @@
 
 			actualizar: function(){
 		    	if(this.identificador >0){
-		    		let mensajeValidacion = isFormularioValido(this.nombreProducto,this.precioProducto,this.fechaProducto, this.cantidadProducto);
+		    		let mensajeValidacion = isFormularioValido(this.nombreProducto,this.precioProducto,this.fechaProducto, this.cantidadProducto, this.seccion, this.pesoProducto);
 		    		if(mensajeValidacion ==''){
 				    	
 						let cantidadAux='0';
@@ -176,13 +178,13 @@
 						axios.put(url + data.Id, data)
 						.then(response => {
 							EventBus.$emit("updateProducto", this.data);
+							this.nuevo();
 							swal(
 								  '',
 								  'Producto actualizado!',
 								  'success'
 								)
 						})
-						this.nuevo();
 					}else{
 						swal('', mensajeValidacion, 'error');
 			        }
@@ -212,25 +214,27 @@
         		EventBus.$emit("seleccionarId", undefined);
       		},
       		ocultar: function(){
+      			this.fechaProducto='';
+		     	this.cantidadProducto='';
+		     	this.pesoProducto='';
       			if(this.seccion=='Limpieza'){
 
       				this.esPorCantidad=true;
       				this.esPorPeso=false;
-      				this.tieneFechaCad=true;
+      				this.tieneFechaCad=false;
 
       			}else if(this.seccion=='Lacteos'){
 
 					this.esPorCantidad=true;
       				this.esPorPeso=false;
-      				this.tieneFechaCad=false;
+      				this.tieneFechaCad=true;
 
       			}else if(this.seccion=='Reposteria'){
 
       				this.esPorCantidad=false;
       				this.esPorPeso=true;
-      				this.tieneFechaCad=false;
+      				this.tieneFechaCad=true;
       			}
-        		//EventBus.$emit("seleccionarId", undefined);
       		},
 		},
 		created() {
@@ -238,7 +242,7 @@
     		this.seccion = this.producto.Seccion;
     		this.nombreProducto = this.producto.Nombre;
     		this.precioProducto= this.producto.Precio;
-    		if(this.producto.Fecha != null && this.producto.Fecha!= ''){
+    		if(this.producto.Fecha != null && this.producto.Fecha!= '' && this.seccion != 'Limpieza'){
 		    	this.fechaProducto= this.producto.Fecha.split('T')[0];
 			}else{
 				this.fechaProducto='';
@@ -272,7 +276,7 @@
   		}
 	}
 
-	function isFormularioValido(nomProducto, preProducto, fechProducto, cantProducto){
+	function isFormularioValido(nomProducto, preProducto, fechProducto, cantProducto, nomSeccion, pesoProducto){
 		let mensajeVal='';
 		if(nomProducto == null || nomProducto=='' || (nomProducto!=null && nomProducto.trim()=='')){
 			return 'El nombre del producto debe estar relleno.'
@@ -280,24 +284,29 @@
 		if(preProducto<=0){
 			return 'El precio del producto debe ser mayor que cero'
 		}
-		// let mensaje = esEntero(cantProducto)
-		// if(mensaje!= ''){
-		// 	return 'Campo Cantidad : '+ mensaje;
-		// }
-
-		if(cantProducto < 0){
-			return 'La cantidad del producto debe ser mayor que cero'
+		if(nomSeccion != 'Reposteria'){
+			if(cantProducto <= 0){
+				return 'La cantidad del producto debe ser mayor que cero'
+			}else if(cantProducto % 1 && cantProducto != 0){
+				return 'Debes introducir un número entero';
+			}
 		}
 
+		let hoy = new Date();
+		let d = new Date(fechProducto);
+		if(nomSeccion != 'Limpieza'){
+			if(fechProducto == null || fechProducto == '' ){
+				return 'La fecha de caducidad no puede estar vacía'
+			}else if(d<hoy){
+				return 'La fecha caducidad debe ser mayor que la fecha de hoy';
+			}
+		}
+		if(nomSeccion != 'Lacteos' && nomSeccion != 'Limpieza'){
+			if(pesoProducto <= 0){
+				return 'El peso del producto debe ser mayor que cero'
+			}
+		}
 		return '';
-	}
-	function esEntero(numero){
-	    if (numero % 1 == 0 && numero > 0) {
-	        return '';
-	    }
-	    else{
-	        return 'debes introducir un numero entero y positivo.';
-	    }
 	}
 </script>
 <style>

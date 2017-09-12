@@ -2,10 +2,6 @@
 	<div id="maestro" class="container">
 		<div class="row">
 			<div class="col">
-				<!-- <label>Nombre a Filtrar:</label>
-				<input type="text" v-model="nombreFiltrado">
-				<input type="button" class="btn btn-success btn-md" id="filtrar" value="Filtrar" v-on:click="filtrar"/>
- -->
 				<h2 class="titulo">Producto</h2>
 				<table v-if="productos && productos.length" class="table table-hover">
 					<thead>
@@ -55,23 +51,6 @@
 			  			this.productos = response.data;
 		  			})
 		  	},
-		  	/*filtrar: function(){
-		  		if(this.nombreFiltrado== undefined || this.nombreFiltrado==''){
-		  			swal('', 'Debes introducir un nombre para filtrar..','');
-		  		}else{
-					let encontrado= false;
-					let entero= 0;
-					let productosCoincidentes= this.productos;
-					console.log('Nomb:'+this.nombreFiltrado);
-					this.productosCoincidentes.forEach((p, index) =>{
-						if(p.Nombre == this.nombreFiltrado){
-							entero = index;
-							encontrado= true;
-							this.productos = this.productosCoincidentes[entero];
-						}
-		  			});
-			  	}
-		  	},*/
 		  	detalle: function(evt){
 		  		let id = evt.target.id;
 		  			id = evt.target.parentNode.id;

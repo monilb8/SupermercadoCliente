@@ -3,17 +3,21 @@
 		<div class="row">
 			<div class="col">
 				<h2 class="titulo">Sección</h2>
-				<table v-if="secciones && secciones.length" class="table table-bordered">
-				 	<tr>
-				 		<th>Nombre de Sección</th>
-				 		<th>Encargado</th>
-				 		<th>Fecha</th>
-				 	</tr>
-					<tr v-for="seccion of secciones" v-on:click="detalle" v-bind:id="seccion.Id">
-						<td>{{ seccion.NombreSeccion }}</td>
-						<td>{{ seccion.Encargado }}</td>
-						<td>{{new Date(seccion.FechaFrecuenciaStock).toLocaleDateString()}}</td>
-					</tr>
+				<table v-if="secciones && secciones.length" class="table table-hover">
+					<thead>
+					 	<tr class="table-success">
+					 		<th>Nombre de Sección</th>
+					 		<th>Encargado</th>
+					 		<th>Fecha</th>
+					 	</tr>
+				 	</thead>
+				 	<tbody>
+						<tr v-for="seccion of secciones" v-on:click="detalle" v-bind:id="seccion.Id">
+							<td>{{ seccion.NombreSeccion }}</td>
+							<td>{{ seccion.Encargado }}</td>
+							<td>{{new Date(seccion.FechaFrecuenciaStock).toLocaleDateString()}}</td>
+						</tr>
+					</tbody>
 				</table>
 				<input type="button" class="btn btn-success btn-md" id="nuevo" value="Mostrar Detalle" v-on:click="nuevo"/>
 			</div>
@@ -91,7 +95,6 @@
 }
 </script>
 <style>
-
 	
 </style>
 

@@ -24,7 +24,7 @@
 			<br>
 			<div>
 				<label>Fecha de caducidad:</label>
-				<input type="date" class="form-control" id="fec" name="fecha" v-model="fechaProducto" />
+				<input type="date" class="form-control" id="fec" name="fecha" v-model="fechaProducto" :disabled="tieneFechaCad == true"/>
 			</div>
 			<br>
 			<div >
@@ -35,11 +35,6 @@
 			<div>
 				<label>Peso:</label>
 				<input type="number" class="form-control" id="pes" name="peso" v-model="pesoProducto"  :disabled="esPorCantidad == true"/>
-			</div>
-			<br>
-			<div>
-				<label>Número de unidades:</label>
-				<input type="number" class="form-control" id="uni" name="unidades" v-model="numUnidadProducto" />
 			</div>
 			<br>
 			<div class="form-group">
@@ -68,6 +63,7 @@
 		     	activo: true,
 		     	esPorPeso: false,
 		     	esPorCantidad: false,
+		     	tieneFechaCad: false,
 		     	seccion:undefined,
 		     	nombreProducto:undefined,
 		     	precioProducto:undefined,
@@ -76,7 +72,6 @@
 		     	identificador:undefined,
 		     	pesoProducto:undefined,
 		     	ofertaProducto:undefined,
-		     	numUnidadProducto:undefined,
 		     	optionsSec: [
 			      { text: 'Limpieza', value: 'Limpieza' },
 			      { text: 'Lácteos', value: 'Lacteos' },
@@ -94,10 +89,10 @@
 		     	this.cantidadProducto=undefined;
 		     	this.pesoProducto=undefined;
 		     	this.ofertaProducto=undefined;
-		     	this.numUnidadProducto=undefined;
 		     	this.identificador=-1;
 		     	this.esPorPeso=false;
 		     	this.esPorCantidad=false;
+		     	this.tieneFechaCad=false;
 		  	},
 
 		  	enviar: function(){
@@ -107,21 +102,26 @@
 
 		    			let cantidadAux='0';
 		    			let pesoAux='0';
-		    			if(this.seccion=='Limpieza' || this.seccion=='Lacteos'){
+		    			let fechaAux=new Date();
+		    			fechaAux= '01/01/3000';
+		    			if(this.seccion=='Limpieza'){
 		    				cantidadAux=this.cantidadProducto;
 		    			}else if(this.seccion=='Reposteria'){
 		    				pesoAux=this.pesoProducto;
+		    				fechaAux=this.fechaProducto
+		    			}else if(this.seccion=='Lacteos'){
+		    				cantidadAux=this.cantidadProducto;
+		    				fechaAux=this.fechaProducto
 		    			}
 
 				    	let data = {
 				    		Seccion: this.seccion,
 					        Nombre: this.nombreProducto,
 					        Precio: this.precioProducto,
-					        Fecha: this.fechaProducto,
+					        Fecha: fechaAux,
 					        Cantidad: cantidadAux,
 					        Peso: pesoAux,
 					        Oferta: this.ofertaProducto,
-					        NumUnidades: this.numUnidadProducto,
 					        Id: this.identificador
 				      	}
 				        axios.post(url ,data)
@@ -150,21 +150,27 @@
 				    	
 						let cantidadAux='0';
 		    			let pesoAux='0';
-		    			if(this.seccion=='Limpieza' || this.seccion=='Lacteos'){
+		    			let fechaAux=new Date();
+		    			fechaAux= '01/01/3000';
+		    			if(this.seccion=='Limpieza'){
 		    				cantidadAux=this.cantidadProducto;
 		    			}else if(this.seccion=='Reposteria'){
 		    				pesoAux=this.pesoProducto;
+		    				fechaAux=this.fechaProducto
+		    			}else if(this.seccion=='Lacteos'){
+		    				cantidadAux=this.cantidadProducto;
+		    				fechaAux=this.fechaProducto
 		    			}
+
 		    			
 				    	let data = {
 				    		Seccion: this.seccion,
 					        Nombre: this.nombreProducto,
 					        Precio: this.precioProducto,
-					        Fecha: this.fechaProducto,
+					        Fecha: fechaAux,
 					        Cantidad: cantidadAux,
 					        Peso: pesoAux,
 					        Oferta: this.ofertaProducto,
-					        NumUnidades: this.numUnidadProducto,
 					        Id: this.identificador
 				      	}
 						axios.put(url + data.Id, data)
@@ -198,7 +204,7 @@
 			        })
 					this.nuevo();
 				}else{
-		    		swal('', 'Debes seleccionar un producto para poder borrar.','');
+		    		swal('', 'Debes seleccionar un producto para eliminar.','');
 		    	}
 			},
 			close: function(){
@@ -206,15 +212,23 @@
         		EventBus.$emit("seleccionarId", undefined);
       		},
       		ocultar: function(){
-      			console.log('La seccion vale:'+this.seccion);
-      			if(this.seccion=='Lacteos' || this.seccion=='Limpieza' ){
-      				//Mostraras input de cantidad
+      			if(this.seccion=='Limpieza'){
+
       				this.esPorCantidad=true;
       				this.esPorPeso=false;
+      				this.tieneFechaCad=true;
+
+      			}else if(this.seccion=='Lacteos'){
+
+					this.esPorCantidad=true;
+      				this.esPorPeso=false;
+      				this.tieneFechaCad=false;
+
       			}else if(this.seccion=='Reposteria'){
-      				//Mostraras input de peso
-					this.esPorCantidad=false;
+
+      				this.esPorCantidad=false;
       				this.esPorPeso=true;
+      				this.tieneFechaCad=false;
       			}
         		//EventBus.$emit("seleccionarId", undefined);
       		},
@@ -226,6 +240,8 @@
     		this.precioProducto= this.producto.Precio;
     		if(this.producto.Fecha != null && this.producto.Fecha!= ''){
 		    	this.fechaProducto= this.producto.Fecha.split('T')[0];
+			}else{
+				this.fechaProducto='';
 			}
 			if(this.producto.Cantidad!= null && this.producto.Cantidad!='0'){
 		    	this.cantidadProducto= this.producto.Cantidad;
@@ -238,19 +254,21 @@
 			}else{
 				this.pesoProducto='';
 			}
-
 		    this.ofertaProducto= this.producto.Oferta;
-		    this.numUnidadProducto= this.producto.NumUnidades;
 		    this.identificador=this.producto.Id;
-			if(this.seccion=='Lacteos' || this.seccion=='Limpieza' ){
-  				//Mostraras input de cantidad
+			if(this.seccion=='Lacteos'){
   				this.esPorCantidad=true;
   				this.esPorPeso=false;
+  				this.tieneFechaCad=true;
   			}else if(this.seccion=='Reposteria'){
-  				//Mostraras input de peso
 				this.esPorCantidad=false;
   				this.esPorPeso=true;
-  			}
+  				this.tieneFechaCad=true;
+  			}else if(this.seccion=='Limpieza'){
+  				this.esPorCantidad=true;
+  				this.esPorPeso=false;
+      			this.tieneFechaCad=false;
+      		}
   		}
 	}
 
@@ -259,12 +277,16 @@
 		if(nomProducto == null || nomProducto=='' || (nomProducto!=null && nomProducto.trim()=='')){
 			return 'El nombre del producto debe estar relleno.'
 		}
-		if(cantProducto<=0){
-			return 'La cantidad de producto debe ser mayor que cero'
+		if(preProducto<=0){
+			return 'El precio del producto debe ser mayor que cero'
 		}
-		let mensaje = esEntero(preProducto)
-		if(mensaje!= ''){
-			return 'Campo Precio: '+ mensaje;
+		// let mensaje = esEntero(cantProducto)
+		// if(mensaje!= ''){
+		// 	return 'Campo Cantidad : '+ mensaje;
+		// }
+
+		if(cantProducto < 0){
+			return 'La cantidad del producto debe ser mayor que cero'
 		}
 
 		return '';
@@ -274,7 +296,7 @@
 	        return '';
 	    }
 	    else{
-	        return 'Debes introducir un numero entero y positivo.';
+	        return 'debes introducir un numero entero y positivo.';
 	    }
 	}
 </script>

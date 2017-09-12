@@ -97,7 +97,7 @@
 
 		  	enviar: function(){
 		    	if(this.identificador <0){
-		    		let mensajeValidacion = isFormularioValido(this.nombreSeccion,this.encargadoSeccion, this.gestionStockSeccion, this.ventaPesoSeccion);
+		    		let mensajeValidacion = isFormularioValido(this.nombreSeccion,this.encargadoSeccion, this.gestionStockSeccion, this.ventaPesoSeccion, this.feSeccion);
 		    		if(mensajeValidacion ==''){
 				    	let data = {
 					        NombreSeccion: this.nombreSeccion,
@@ -129,7 +129,7 @@
 
 			actualizar: function(){
 		    	if(this.identificador >0){
-		    		let mensajeValidacion = isFormularioValido(this.nombreSeccion,this.encargadoSeccion, this.gestionStockSeccion, this.ventaPesoSeccion);
+		    		let mensajeValidacion = isFormularioValido(this.nombreSeccion,this.encargadoSeccion, this.gestionStockSeccion, this.ventaPesoSeccion, this.feSeccion);
 		    		if(mensajeValidacion ==''){
 				    	let data = {
 					        NombreSeccion: this.nombreSeccion,
@@ -190,7 +190,7 @@
   		}
 	}
 
-	function isFormularioValido(nomSeccion, encSeccion, gesSeccion, tiVeSeccion){
+	function isFormularioValido(nomSeccion, encSeccion, gesSeccion, feSeccion, tiVeSeccion){
 		let mensajeVal='';
 		if(nomSeccion == null || nomSeccion=='' || (nomSeccion!=null && nomSeccion.trim()=='')){
 			return 'El nombre de la sección debe estar relleno.'
@@ -200,9 +200,6 @@
 		}
 		if(gesSeccion == null || gesSeccion=='' || (gesSeccion!=null && gesSeccion.trim()=='')){
 			return 'El campo de frecuencia de reposición debe estar relleno.'
-		}
-		if(tiVeSeccion == null || tiVeSeccion=='' || (tiVeSeccion!=null && tiVeSeccion.trim()=='')){
-			return 'El tipo de venta debe estar relleno. Escoja una de las opciones.'
 		}
 		return '';
 	}

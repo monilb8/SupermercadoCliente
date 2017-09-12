@@ -2,23 +2,27 @@
 	<div id="maestro" class="container">
 		<div class="row">
 			<div class="col">
-				<label>Nombre a Filtrar:</label>
+				<!-- <label>Nombre a Filtrar:</label>
 				<input type="text" v-model="nombreFiltrado">
 				<input type="button" class="btn btn-success btn-md" id="filtrar" value="Filtrar" v-on:click="filtrar"/>
-
+ -->
 				<h2 class="titulo">Producto</h2>
-				<table v-if="productos && productos.length" class="table table-bordered">
-				 	<tr>
-				 		<th>Nombre</th>
-				 		<th>Precio</th>
-				 		<th>Cantidad</th>
-				 	</tr>
-					<tr v-for="producto of productos" v-on:click="detalle" v-bind:id="producto.Id">
-						<td>{{ producto.Nombre }}</td>
-						<td>{{ producto.Precio }}</td>
-						<td>{{ producto.Cantidad }}</td>
-						<!-- <td>{{new Date(producto.Fecha).toLocaleDateString()}}</td> -->
-					</tr>
+				<table v-if="productos && productos.length" class="table table-hover">
+					<thead>
+					 	<tr class="table-success">
+					 		<th>Nombre</th>
+					 		<th>Precio</th>
+					 		<th>Cantidad</th>
+					 	</tr>
+				 	</thead>
+				 	<tbody>
+						<tr v-for="producto of productos" v-on:click="detalle" v-bind:id="producto.Id">
+							<td>{{ producto.Nombre }}</td>
+							<td>{{ producto.Precio }}</td>
+							<td>{{ producto.Cantidad }}</td>
+							<!-- <td>{{new Date(producto.Fecha).toLocaleDateString()}}</td> -->
+						</tr>
+					</tbody>
 				</table>
 				<input type="button" class="btn btn-success btn-md" id="nuevo" value="Mostrar Detalle" v-on:click="nuevo"/>
 			</div>
@@ -51,7 +55,7 @@
 			  			this.productos = response.data;
 		  			})
 		  	},
-		  	filtrar: function(){
+		  	/*filtrar: function(){
 		  		if(this.nombreFiltrado== undefined || this.nombreFiltrado==''){
 		  			swal('', 'Debes introducir un nombre para filtrar..','');
 		  		}else{
@@ -67,7 +71,7 @@
 						}
 		  			});
 			  	}
-		  	},
+		  	},*/
 		  	detalle: function(evt){
 		  		let id = evt.target.id;
 		  			id = evt.target.parentNode.id;

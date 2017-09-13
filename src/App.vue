@@ -3,6 +3,7 @@
     <header class="jumbotron text-center">
       <div class="row justify-content-center">
         <div class="menu">
+          <h2>INVENTARIO SUPERMERCADO</h2>
           <button id="seccion" type="button" class="btn btn-primary btn-lg" v-on:click="abrirComponente">SECCIONES</button>
           <button id="producto" type="button" class="btn btn-primary btn-lg" v-on:click="abrirComponente">PRODUCTOS</button>
         </div>

@@ -6,17 +6,16 @@
 				<table v-if="productos && productos.length" class="table table-hover">
 					<thead>
 					 	<tr class="table-success">
+					 		<th>Sección</th>
 					 		<th>Nombre</th>
-					 		<th>Precio</th>
 					 		<th>Cantidad</th>
 					 	</tr>
 				 	</thead>
 				 	<tbody>
 						<tr v-for="producto of productos" v-on:click="detalle" v-bind:id="producto.Id">
+							<td>{{ producto.Seccion}}</td>
 							<td>{{ producto.Nombre }}</td>
-							<td>{{ producto.Precio }}</td>
 							<td>{{ producto.Cantidad }}</td>
-							<!-- <td>{{new Date(producto.Fecha).toLocaleDateString()}}</td> -->
 						</tr>
 					</tbody>
 				</table>

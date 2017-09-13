@@ -1,7 +1,7 @@
 <template>
 	<div id="form">
 		<div v-if="activo" class="detalle">
-			<h2>Detalle Sección <a class="close" v-on:click="close">&times;</a></h2>
+			<h2>Detalle Sección <button class="btn btn-danger btn-sm"><a class="close" v-on:click="close">&times;</a></button></h2>
 			<label>Nombre de Sección:</label>
 			<div>
 				<select class="custom-select" v-model="nombreSeccion">
@@ -43,10 +43,10 @@
 			</div>
 
 			<div class="botones">
-				<input type="button" class="btn btn-outline-success btn-md" id="btnEnv" value="Insertar" v-on:click="enviar"/>
+				<input type="button" class="btn btn-outline-primary btn-md" id="btnEnv" value="Insertar" v-on:click="enviar"/>
 				<input type="button" class="btn btn-outline-success btn-md" id="btnAct" value="Actualizar" v-on:click="actualizar"/>
-				<input type="button" class="btn btn-outline-success btn-md" id="btnEli" value="Eliminar" v-on:click="eliminar"/>
-				<input type="button" class="btn btn-outline-success btn-md" id="btnVac" value="Vaciar" v-on:click="nuevo"/>
+				<input type="button" class="btn btn-outline-danger btn-md" id="btnEli" value="Eliminar" v-on:click="eliminar"/>
+				<input type="button" class="btn btn-outline-warning btn-md" id="btnVac" value="Vaciar" v-on:click="nuevo"/>
 			</div>
 		</div>
 	</div>
@@ -71,8 +71,13 @@
 		     	identificador:undefined,
 		     	optionsSec: [
 			      { text: 'Limpieza', value: 'Limpieza' },
-			      { text: 'Lácteos', value: 'Lacteos' },
-			      { text: 'Repostería', value: 'Reposteria' }
+			      { text: 'Lácteos', value: 'Lácteos' },
+			      { text: 'Repostería', value: 'Repostería' },
+			      { text: 'Congelados', value: 'Congelados' },
+			      { text: 'Pescadería', value: 'Pescadería' },
+			      { text: 'Charcutería', value: 'Charcutería'},
+			      { text: 'Refrescos', value: 'Refrescos'},
+			      { text: 'Frutas y verduras', value: 'Frutas y verduras' }
 			    ],
 			    optionsStock: [
 			      { text: 'Dos veces a la semana', value: 'Dos veces a la semana' },

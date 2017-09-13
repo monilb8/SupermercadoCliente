@@ -1,7 +1,7 @@
 <template>
 	<div id="form">
 		<div v-if="activo" class="detalle">
-			<h2>Detalle Producto <a class="close" v-on:click="close">&times;</a></h2>
+			<h2>Detalle Producto <button class="btn btn-danger btn-sm"><a class="close" v-on:click="close">&times;</a></button></h2>
 			<label>Sección:</label>
 			<div>
 				<select class="custom-select" v-model="seccion" v-on:change="ocultar">
@@ -44,10 +44,10 @@
         		<label>¿Permitir oferta en el producto?</label>
       		</div>
 			<div class="botones">
-				<input type="button" class="btn btn-outline-success btn-md" id="btnEnv" value="Insertar" v-on:click="enviar"/>
+				<input type="button" class="btn btn-outline-primary btn-md" id="btnEnv" value="Insertar" v-on:click="enviar"/>
 				<input type="button" class="btn btn-outline-success btn-md" id="btnAct" value="Actualizar" v-on:click="actualizar"/>
-				<input type="button" class="btn btn-outline-success btn-md" id="btnEli" value="Eliminar" v-on:click="eliminar"/>
-				<input type="button" class="btn btn-outline-success btn-md" id="btnVac" value="Vaciar" v-on:click="nuevo"/>
+				<input type="button" class="btn btn-outline-danger btn-md" id="btnEli" value="Eliminar" v-on:click="eliminar"/>
+				<input type="button" class="btn btn-outline-warning btn-md" id="btnVac" value="Vaciar" v-on:click="nuevo"/>
 			</div>
 		</div>
 	</div>
@@ -65,7 +65,7 @@
 		     	activo: true,
 		     	esPorPeso: false,
 		     	esPorCantidad: false,
-		     	tieneFechaCad: false,
+		     	tieneFechaCad: true,
 		     	seccion:undefined,
 		     	nombreProducto:undefined,
 		     	precioProducto:undefined,
@@ -94,14 +94,12 @@
 		     	this.identificador=-1;
 		     	this.esPorPeso=false;
 		     	this.esPorCantidad=false;
-		     	this.tieneFechaCad=false;
+		     	this.tieneFechaCad=true;
 		  	},
-
 		  	enviar: function(){
 		    	if(this.identificador <0){
 		    		let mensajeValidacion = isFormularioValido(this.nombreProducto,this.precioProducto,this.fechaProducto, this.cantidadProducto, this.seccion, this.pesoProducto);
 		    		if(mensajeValidacion ==''){
-
 		    			let cantidadAux='0';
 		    			let pesoAux='0';
 		    			let fechaAux=new Date();
@@ -115,7 +113,6 @@
 		    				cantidadAux=this.cantidadProducto;
 		    				fechaAux=this.fechaProducto
 		    			}
-
 				    	let data = {
 				    		Seccion: this.seccion,
 					        Nombre: this.nombreProducto,
@@ -144,7 +141,6 @@
 		    		swal('', 'Debes vaciar y volver a rellenar el formulario para insertar.','');
 		    	}
 			},
-
 			actualizar: function(){
 		    	if(this.identificador >0){
 		    		let mensajeValidacion = isFormularioValido(this.nombreProducto,this.precioProducto,this.fechaProducto, this.cantidadProducto, this.seccion, this.pesoProducto);
@@ -163,7 +159,6 @@
 		    				cantidadAux=this.cantidadProducto;
 		    				fechaAux=this.fechaProducto
 		    			}
-
 		    			
 				    	let data = {
 				    		Seccion: this.seccion,
@@ -192,7 +187,6 @@
 		    		swal('', 'Debes seleccionar un producto para poder actualizar.', '');
 		    	}
 			},
-
 			eliminar: function(){
 		    	if(this.identificador >0){
 			    	axios.delete(url + this.identificador)
@@ -218,19 +212,14 @@
 		     	this.cantidadProducto='';
 		     	this.pesoProducto='';
       			if(this.seccion=='Limpieza'){
-
       				this.esPorCantidad=true;
       				this.esPorPeso=false;
       				this.tieneFechaCad=false;
-
       			}else if(this.seccion=='Lacteos'){
-
 					this.esPorCantidad=true;
       				this.esPorPeso=false;
       				this.tieneFechaCad=true;
-
       			}else if(this.seccion=='Reposteria'){
-
       				this.esPorCantidad=false;
       				this.esPorPeso=true;
       				this.tieneFechaCad=true;
@@ -252,7 +241,6 @@
 			}else{
 				this.cantidadProducto='';
 			}
-
 			if(this.producto.Peso!= null && this.producto.Peso!='0'){
 		    	this.pesoProducto= this.producto.Peso;
 			}else{
@@ -275,13 +263,15 @@
       		}
   		}
 	}
-
 	function isFormularioValido(nomProducto, preProducto, fechProducto, cantProducto, nomSeccion, pesoProducto){
 		let mensajeVal='';
-		if(nomProducto == null || nomProducto=='' || (nomProducto!=null && nomProducto.trim()=='')){
-			return 'El nombre del producto debe estar relleno.'
+		if(nomSeccion == null || nomSeccion=='' || (nomSeccion!=null && nomSeccion.trim()=='')){
+			return 'El nombre de la sección debe estar relleno.'
 		}
-		if(preProducto<=0){
+		if(nomProducto == null || nomProducto=='' || (nomProducto!=null && nomProducto.trim()=='')){
+			return 'El nombre del producto debe escodProductotar relleno.'
+		}
+		if(preProducto == null || preProducto <= 0){
 			return 'El precio del producto debe ser mayor que cero'
 		}
 		if(nomSeccion != 'Reposteria'){
@@ -306,6 +296,7 @@
 				return 'El peso del producto debe ser mayor que cero'
 			}
 		}
+
 		return '';
 	}
 </script>

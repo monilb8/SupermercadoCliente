@@ -8,13 +8,13 @@
 					 	<tr class="table-success">
 					 		<th>Nombre de Sección</th>
 					 		<th>Encargado</th>
-					 		<th>Fecha</th>
+					 		<th>Fecha de última reposición</th>
 					 	</tr>
 				 	</thead>
 				 	<tbody>
 						<tr v-for="seccion of secciones" v-on:click="detalle" v-bind:id="seccion.Id">
 							<td>{{ seccion.NombreSeccion }}</td>
-							<td>{{ seccion.Encargado }}</td>
+							<td >{{ seccion.Encargado }}</td>
 							<td>{{new Date(seccion.FechaFrecuenciaStock).toLocaleDateString()}}</td>
 						</tr>
 					</tbody>

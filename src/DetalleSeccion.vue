@@ -204,6 +204,7 @@
 		    this.identificador=this.seccion.Id;
   		}
 	}
+
 	function isFormularioValido(nomSeccion, encSeccion, gesSeccion, tiVeSeccion, feSeccion){
 		let mensajeVal='';
 		if(nomSeccion == null || nomSeccion=='' || (nomSeccion!=null && nomSeccion.trim()=='')){

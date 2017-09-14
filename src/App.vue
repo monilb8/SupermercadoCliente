@@ -1,12 +1,16 @@
 <template>
-  <div id="home" class="container"> 
-    <div class="row justify-content-center">
-      <div class="menu">
-        <button id="seccion" type="button" class="btn btn-primary btn-lg" v-on:click="abrirComponente">Sección</button>
-        <button id="producto" type="button" class="btn btn-primary btn-lg" v-on:click="abrirComponente">Producto</button>
+  <div id="home" class="container-fluid"> 
+    <header class="jumbotron text-center">
+      <div class="row justify-content-center">
+        <div class="menu">
+          <h2>INVENTARIO SUPERMERCADO</h2>
+          <button id="seccion" type="button" class="btn btn-primary btn-lg" v-on:click="abrirComponente">SECCIONES</button>
+          <button id="producto" type="button" class="btn btn-primary btn-lg" v-on:click="abrirComponente">PRODUCTOS</button>
+        </div>
       </div>
-    </div>
+    </header>
     <div id="maestro"></div>
+
   </div>
 </template>
 
@@ -15,7 +19,6 @@
   import Vue from 'vue'
   import MasterSeccion from "./MaestroSeccion.vue"
   import MasterProducto from "./MaestroProducto.vue"
-
   export default {
     name: 'app',
     data () {
@@ -31,7 +34,6 @@
               render: h => h(MasterSeccion)
             })
             break;
-
           case "producto":
             new Vue({
               el:'#maestro',
@@ -39,7 +41,6 @@
             })
             break;
         }
-
       }
     }
   }
@@ -52,5 +53,4 @@
     margin-top: 5px;
     margin-bottom: 30px;
   }
-
 </style>

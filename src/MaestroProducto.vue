@@ -9,6 +9,7 @@
 					 		<th>Sección</th>
 					 		<th>Nombre</th>
 					 		<th>Cantidad</th>
+					 		<th>Peso</th>
 					 	</tr>
 				 	</thead>
 				 	<tbody>
@@ -16,6 +17,7 @@
 							<td>{{ producto.Seccion}}</td>
 							<td>{{ producto.Nombre }}</td>
 							<td>{{ producto.Cantidad }}</td>
+							<td>{{ producto.Peso }}</td>
 						</tr>
 					</tbody>
 				</table>
